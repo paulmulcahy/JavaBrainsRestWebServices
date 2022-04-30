@@ -6,6 +6,7 @@ import ca.pmulcahy.messenger.model.Message;
 import ca.pmulcahy.messenger.service.MessageService;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
@@ -25,4 +26,11 @@ public class MessageResource {
 	public List<Message> getMessages() {
 		return messageService.getAllMessages();
 	}
+
+    @GET
+    @Path("/{messageId}")
+    @Produces(MediaType.APPLICATION_XML)
+    public Message getMessage(@PathParam("messageId") long messageId) {
+        return messageService.getMessage(messageId);
+    }
 }
