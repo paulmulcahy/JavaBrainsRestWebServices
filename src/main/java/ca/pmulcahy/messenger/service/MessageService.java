@@ -9,9 +9,9 @@ import ca.pmulcahy.messenger.model.Message;
 
 public class MessageService {
 	
-	private Map<Long, Message> messages = DatabaseClass.getMessages();
+	private static Map<Long, Message> messages = DatabaseClass.getMessages();
 	
-	public MessageService() {
+	static {
 		messages.put(1L, new Message(1, "Hello World", "Mulcahy"));
 		messages.put(2L, new Message(2, "Hello Jersey", "Mulcahy"));
 	}
