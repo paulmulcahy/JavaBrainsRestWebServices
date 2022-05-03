@@ -12,6 +12,7 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 
 @Path("/messages")
@@ -28,8 +29,16 @@ public class MessageResource {
      * @return String that will be returned as a text/plain response.
      */
     @GET
-	public List<Message> getMessages() {
-		return messageService.getAllMessages();
+	public List<Message> getMessages(@QueryParam("year") int year,
+									 @QueryParam("start") int start,
+									 @QueryParam("size") int size) {
+		if (year > 0) {
+			return messageService.getAllMessagesForYear(year);
+		}
+		if(start >= 0 && size > 0) {
+			return messageService.getAllMessagesPaginated(start, size);
+		}
+    	return messageService.getAllMessages();
 	}
 
     @POST
