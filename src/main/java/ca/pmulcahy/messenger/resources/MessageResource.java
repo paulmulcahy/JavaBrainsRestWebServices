@@ -3,7 +3,9 @@ package ca.pmulcahy.messenger.resources;
 import java.util.List;
 
 import ca.pmulcahy.messenger.model.Message;
+import ca.pmulcahy.messenger.resources.beans.MessageFilterBean;
 import ca.pmulcahy.messenger.service.MessageService;
+import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -12,7 +14,6 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 
 @Path("/messages")
@@ -29,14 +30,12 @@ public class MessageResource {
      * @return String that will be returned as a text/plain response.
      */
     @GET
-	public List<Message> getMessages(@QueryParam("year") int year,
-									 @QueryParam("start") int start,
-									 @QueryParam("size") int size) {
-		if (year > 0) {
-			return messageService.getAllMessagesForYear(year);
+	public List<Message> getMessages(@BeanParam MessageFilterBean filterBean) {
+		if (filterBean.getYear() > 0) {
+			return messageService.getAllMessagesForYear(filterBean.getYear());
 		}
-		if(start >= 0 && size > 0) {
-			return messageService.getAllMessagesPaginated(start, size);
+		if(filterBean.getStart() >= 0 && filterBean.getSize() > 0) {
+			return messageService.getAllMessagesPaginated(filterBean.getStart(), filterBean.getSize());
 		}
     	return messageService.getAllMessages();
 	}
