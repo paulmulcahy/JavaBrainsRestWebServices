@@ -3,6 +3,7 @@ package ca.pmulcahy.messenger.resources;
 import java.net.URI;
 import java.util.List;
 
+import ca.pmulcahy.messenger.model.Link;
 import ca.pmulcahy.messenger.model.Message;
 import ca.pmulcahy.messenger.resources.beans.MessageFilterBean;
 import ca.pmulcahy.messenger.service.MessageService;
@@ -69,9 +70,20 @@ public class MessageResource {
     
     @GET
     @Path("/{messageId}")
-    public Message getMessage(@PathParam("messageId") long id) {
-        return messageService.getMessage(id);
+    public Message getMessage(@PathParam("messageId") long id, @Context UriInfo uriInfo) {
+        Message message = messageService.getMessage(id);
+        String uri = getUriForSelf(uriInfo, message);
+        message.addLink(uri, "self");
+        return message;
     }
+
+	private String getUriForSelf(UriInfo uriInfo, Message message) {
+		String uri = uriInfo.getBaseUriBuilder()
+        					.path(Long.toString(message.getId()))
+        					.build()
+        					.toString();
+		return uri;
+	}
     
     @Path("/{messageId}/comments")
     public CommentResource getCommentResource() {
