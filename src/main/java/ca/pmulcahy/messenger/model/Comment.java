@@ -1,24 +1,20 @@
 package ca.pmulcahy.messenger.model;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement
-public class Message {
+public class Comment {
 
 	private long id;
 	private String message;
 	private LocalDate created;
 	private String author;
-	private Map<Long, Comment> comments = new HashMap<>();
 	
-	public Message() {}
+	public Comment() {}
 	
-	public Message(long id, String message, String author) {
+	public Comment(long id, String message, String author) {
 		this.id = id;
 		this.message = message;
 		this.author = author;
@@ -49,11 +45,5 @@ public class Message {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-	@XmlTransient
-	public Map<Long, Comment> getComments() {
-		return comments;
-	}
-	public void setComments(Map<Long, Comment> comments) {
-		this.comments = comments;
-	}
+	
 }
