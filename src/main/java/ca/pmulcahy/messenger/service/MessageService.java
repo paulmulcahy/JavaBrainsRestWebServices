@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import ca.pmulcahy.messenger.database.DatabaseClass;
+import ca.pmulcahy.messenger.exception.DataNotFoundException;
 import ca.pmulcahy.messenger.model.Message;
 
 public class MessageService {
@@ -38,7 +39,11 @@ public class MessageService {
 	}
 	
 	public Message getMessage(long id) {
-		return messages.get(id);
+		Message message = messages.get(id);
+		if (message == null) {
+			throw new DataNotFoundException("Message with id " + id + " not found");
+		}
+		return message;
 	}
 	
 	public Message addMessage(Message message) {
