@@ -1,5 +1,6 @@
 package ca.pmulcahy.messenger.resources;
 
+import java.net.URI;
 import java.util.List;
 
 import ca.pmulcahy.messenger.model.Message;
@@ -14,7 +15,10 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 
 @Path("/messages")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -41,8 +45,13 @@ public class MessageResource {
 	}
 
     @POST
-    public Message addMessage(Message message) {
-    	return messageService.addMessage(message);
+    public Response addMessage(Message message, @Context UriInfo uriInfo) {
+    	final Message newMessage = messageService.addMessage(message);
+    	final String newId = String.valueOf(newMessage.getId());
+    	final URI uri = uriInfo.getAbsolutePathBuilder().path(newId).build();
+    	return Response.created(uri)
+    				   .entity(newMessage)
+    				   .build();
     }
 
     @PUT
