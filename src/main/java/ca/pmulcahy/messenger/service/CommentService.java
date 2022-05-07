@@ -6,7 +6,12 @@ import java.util.Map;
 
 import ca.pmulcahy.messenger.database.DatabaseClass;
 import ca.pmulcahy.messenger.model.Comment;
+import ca.pmulcahy.messenger.model.ErrorMessage;
 import ca.pmulcahy.messenger.model.Message;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 public class CommentService {
 
@@ -18,8 +23,20 @@ public class CommentService {
 	}
 	
 	public Comment getComment(long messageId, long commentId) {
-		Map<Long, Comment> comments = messages.get(messageId).getComments();
-		return comments.get(commentId);
+		ErrorMessage errorMessage = new ErrorMessage("Not Found", 404, "pmulcahy.ca");
+		Response errorResponse = Response.status(Status.NOT_FOUND)
+					   					 .entity(errorMessage)
+					   					 .build();
+		Message message = messages.get(messageId);
+		if(message == null) {
+			throw new WebApplicationException(errorResponse);
+		}
+		Map<Long, Comment> comments = message.getComments();
+		Comment comment = comments.get(commentId);
+		if (comment == null) {
+			throw new NotFoundException(errorResponse);
+		}
+		return comment;
 	}
 	
 	public Comment addComment(long messageId, Comment comment) {
